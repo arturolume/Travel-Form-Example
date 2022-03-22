@@ -1,0 +1,207 @@
+<!--Link para visualizarlo en linea
+    JSFiddle: https://jsfiddle.net/arturolv/rvy5L9co/-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <title>Travel Authorization Form</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+
+    <div class="container">
+        <!--Seccion A-->
+        <div class="title">Sección A: Información del cliente</div>
+        <!--<form action="#" name="formulario"
+                oninput="resultado.value=parseInt(coste.value)+parseInt(alquiler.value)+parseInt(hotel.value)+parseInt(comida.value)">-->
+        <form action="#" name="formulario">
+
+            <div class="user_details">
+                <div class="input-box">
+                    <span class="details">Cargo</span>
+                    <input type="text" placeholder="Escriba su cargo" style="text-transform:uppercase" minlength="4"
+                        maxlength="100" required>
+                </div>
+                <div class="input-box">
+                    <span class="details">Nombre</span>
+                    <input type="text" placeholder="Escriba su nombre" style="text-transform:uppercase" minlength="4"
+                        maxlength="100" required>
+                </div>
+                <div class="input-box">
+                    <span class="details">Primer apellido</span>
+                    <input type="text" placeholder="Escriba su apellido paterno" style="text-transform:uppercase"
+                        minlength="4" maxlength="100" required>
+                </div>
+                <div class="input-box">
+                    <span class="details">Segundo apellido</span>
+                    <input type="text" placeholder="Escriba su apellido materno " style="text-transform:uppercase"
+                        minlength="4" maxlength="100" required>
+                </div>
+                <div class="input-box">
+                    <span class="details">Correo electrónico</span>
+                    <input type="email" placeholder="example@email.com" required>
+                </div>
+                <div class="input-box">
+                    <span class="details">Numero de teléfono</span>
+                    <input type="number" placeholder="999999999" required>
+                </div>
+            </div>
+            <!--Seccion B-->
+            <div class="title">Sección B: Información del viaje</div>
+            <div class="user_details">
+                <div class="input-box">
+                    <span class="details">Nombre de la aerolinea</span>
+                    <select name="aerolinea" id="aerolinea" required>
+                        <option value="">Escoja una opción</option>
+                        <option value="Latam Airline">Latam Airline</option>
+                        <option value="Sky Airline">Sky Airline</option>
+                        <option value="Star Peru">Star Perú</option>
+                        <option value="Viva Air Peru">Viva Air Perú</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <span class="details">Destino</span>
+                    <input type="text" placeholder="Escriba el destino del viaje" onkeypress="return check(event)"
+                        required>
+                </div>
+                <div class="input-box">
+                    <span class="details">Fecha de salida</span>
+                    <input type="date" id="FechaInicial" min="2020-01-01" onchange="validarFechas()" required>
+                </div>
+                <div class="input-box">
+                    <span class="details">Fecha de regreso</span>
+                    <input type="date" id="FechaFinal" min="2020-01-01" onchange="validarFechas()" required>
+                </div>
+                <div class="input-checkbox">
+                    <span class="details">¿Incluye la visita al cliente?</span>
+                    <input type="checkbox">
+                </div>
+                <div class="input-box">
+                    <span class="details">Coste estimado</span>
+                    <input type="number" id="coste" name="coste" onchange="totalestimado()"
+                        oninput="longitudMaxima(this)" onkeypress="return validarNumeros(event)" maxlength="4" min="100"
+                        max="1000" required>
+                </div>
+            </div>
+            <!--Adicionales-->
+            <div class="title_adicionales">Gastos adicionales estimados</div>
+            <div class="user_details">
+                <div class="input-box">
+                    <span class="details">Alquiler de coche</span>
+                    <input type="number" id="alquiler" name="alquiler" onchange="totalestimado()"
+                        oninput="longitudMaxima(this)" onkeypress="return validarNumeros(event)" maxlength="3" min="100"
+                        max="600">
+                </div>
+                <div class="input-box">
+                    <span class="details">Hotel</span>
+                    <input type="number" id="hotel" name="hotel" onchange="totalestimado()"
+                        onkeypress="return validarNumeros(event)" min="0">
+                </div>
+                <div class="input-box">
+                    <span class="details">Comidas</span>
+                    <input type="number" id="comida" name="comida" onchange="totalestimado()"
+                        onkeypress="return validarNumeros(event)" min="0">
+                </div>
+                <div class="input-box">
+                    <span class="details">Total estimado</span>
+                    <output id="resultado" name="resultado"></output>
+                </div>
+                <div class="title_adicionales">Metodo de pago utilizado</div>
+                <div class="radio_container">
+                    <input type="radio" id="metalico" name="metodo_pago" required="required">
+                    <label class="label_radio" for="metalico">Metálico</label>
+
+                    <input type="radio" id="tarjeta" name="metodo_pago" required="required">
+                    <label class="label_radio" for="tarjeta">Tarjeta de crédito</label>
+
+                    <input type="radio" id="cheque" name="metodo_pago" required="required">
+                    <label class="label_radio" for="cheque">Cheque</label>
+                </div>
+                <label class="label_textarea">Propósito del viaje</label>
+                <div class="textarea_style">
+                    <textarea class="textarea" name="textarea_proposito" id="textarea" cols="37" rows="4"
+                        placeholder="Escriba el proposito de su viaje..."></textarea>
+                </div>
+            </div>
+            <div>
+                <button class="btn-1">Enviar</button>
+            </div>
+        </form>
+    </div>
+    <!--Scripts-->
+    <script>
+        //Solo letras
+        function check(e) {
+            tecla = (document.all) ? e.keyCode : e.which;
+            //Tecla de retroceso para borrar, siempre la permite
+            if (tecla == 8) {
+                return true;
+            }
+
+            // Patron de entrada, solo acepta letras (no numeros ni caracteres especiales)
+            patron = /[A-Za-z]/;
+            tecla_final = String.fromCharCode(tecla);
+            return patron.test(tecla_final);
+        }
+    </script>
+    <script>
+        //Caracteres maximos
+        function longitudMaxima(object) {
+            if (object.value.length > object.maxLength)
+                object.value = object.value.slice(0, object.maxLength)
+        }
+    </script>
+    <script>
+        //Hallar el total
+        function totalestimado() {
+            //Entrada de los valores
+            coste = document.getElementById("coste").value;
+            alquiler = document.getElementById("alquiler").value;
+            hotel = document.getElementById("hotel").value;
+            comida = document.getElementById("comida").value;
+
+            // Para que no ocurran errores NaN, si el valor se encuentra vacio, automaticamente se considera como si fuera 0
+            if (coste == "") { coste = 0 };
+            if (alquiler == "") { alquiler = 0 };
+            if (hotel == "") { hotel = 0 };
+            if (comida == "") { comida = 0 };
+
+            //Sumar el total
+            total = parseFloat(coste) + parseFloat(alquiler) + parseFloat(hotel) + parseFloat(comida);
+
+            //Indicar el total en pantalla
+            document.getElementById("resultado").innerHTML = "S/. " + parseFloat(total);
+        }
+    </script>
+
+    <script>
+        //Validar que solo acepten numeros
+        function validarNumeros(event) {
+            if (event.charCode >= 48 && event.charCode <= 57) {
+                return true;
+            }
+            return false;
+        }
+    </script>
+    <script>
+        //Validacion de fechas
+        function validarFechas() {
+            var fechainicial = document.getElementById("FechaInicial").value;
+            var fechafinal = document.getElementById("FechaFinal").value;
+            
+            //La fecha final siempre debe ser mayor a la inicial
+            //Caso contrario soltara una alerta
+            if (Date.parse(fechafinal) < Date.parse(fechainicial)) {
+
+                alert("La fecha final debe ser mayor a la fecha inicial");
+            }
+        }
+    </script>
+</body>
+
+</html>
